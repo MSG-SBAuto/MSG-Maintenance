@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shutdown Maintenance Dashboard</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  margin: 0;
+}
+
+.header {
+  background: #2c3e50;
+  color: white;
+  padding: 15px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.container {
+  padding: 20px;
+}
+
+/* KPI Cards */
+.kpi-container {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.kpi {
+  flex: 1;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.kpi h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.kpi p {
+  margin: 5px 0 0;
+  color: gray;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+th {
+  background: #34495e;
+  color: white;
+}
+
+/* Status Colors */
+.status {
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+}
+
+.completed { background: #27ae60; }
+.ongoing { background: #2980b9; }
+.delayed { background: #e74c3c; }
+.pending { background: #7f8c8d; }
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  Shutdown Maintenance Dashboard
+</div>
+
+<div class="container">
+
+  <!-- KPI SECTION -->
+  <div class="kpi-container">
+    <div class="kpi">
+      <h2 id="totalTasks">0</h2>
+      <p>Total Tasks</p>
+    </div>
+    <div class="kpi">
+      <h2 id="completedTasks">0</h2>
+      <p>Completed</p>
+    </div>
+    <div class="kpi">
+      <h2 id="ongoingTasks">0</h2>
+      <p>Ongoing</p>
+    </div>
+    <div class="kpi">
+      <h2 id="delayedTasks">0</h2>
+      <p>Delayed</p>
+    </div>
+  </div>
+
+  <!-- TASK TABLE -->
+  <table>
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th>Equipment</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="taskTable"></tbody>
+  </table>
+
+</div>
+
+<script>
+
+// SAMPLE DATA (you can replace with DB later)
+const tasks = [
+  {task: "Pump Maintenance", equipment: "Pump A", start: "08:00", end: "10:00", status: "completed"},
+  {task: "Motor Inspection", equipment: "Motor B", start: "09:00", end: "11:30", status: "ongoing"},
+  {task: "Valve Replacement", equipment: "Valve C", start: "10:00", end: "12:00", status: "delayed"},
+  {task: "Cleaning", equipment: "Tank D", start: "12:00", end: "14:00", status: "pending"}
+];
+
+// LOAD TABLE
+function loadTable() {
+  const table = document.getElementById("taskTable");
+  table.innerHTML = "";
+
+  let total = tasks.length;
+  let completed = 0, ongoing = 0, delayed = 0;
+
+  tasks.forEach(t => {
+    let row = `
+      <tr>
+        <td>${t.task}</td>
+        <td>${t.equipment}</td>
+        <td>${t.start}</td>
+        <td>${t.end}</td>
+        <td><span class="status ${t.status}">${t.status}</span></td>
+      </tr>
+    `;
+    table.innerHTML += row;
+
+    if (t.status === "completed") completed++;
+    if (t.status === "ongoing") ongoing++;
+    if (t.status === "delayed") delayed++;
+  });
+
+  // UPDATE KPI
+  document.getElementById("totalTasks").innerText = total;
+  document.getElementById("completedTasks").innerText = completed;
+  document.getElementById("ongoingTasks").innerText = ongoing;
+  document.getElementById("delayedTasks").innerText = delayed;
+}
+
+loadTable();
+
+</script>
+
+</body>
+</html>
